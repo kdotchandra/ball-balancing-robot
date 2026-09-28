@@ -1,37 +1,46 @@
-# Test Integrated System — LQR + IK + OpenCV (Print-Only)
+# Test Integrated System — LQR + IK + OpenCV บนเครื่องจริง
 
-ทดสอบการเชื่อมต่อ Pipeline แบบ end-to-end ระหว่างการตรวจจับลูกปิงปองจากกล้องและชุดคำนวณควบคุมจากโมเดล 3RRS
+ระบบควบคุม ball-and-plate แบบ 3RRS: ตรวจจับลูกปิงปองจากกล้อง → LQR → servo HX-35H จริง
 
-สถานะปัจจุบันรองรับ actuator dry-run; ยังไม่ส่งคำสั่ง servo จริงโดยค่าเริ่มต้น
+> **เริ่มที่ [../HANDOFF.md](../HANDOFF.md)** (ภาพรวม, ติดตั้ง, calibrate, flag ทั้งหมด, ข้อค้นพบ, ปัญหาที่รู้แล้ว)
+> และ **[../DEMO_RUN.md](../DEMO_RUN.md)** (วิธีรัน demo) — README นี้เก็บรายละเอียดเดิมของการรัน `main.py` และการทดลองบทที่ 4
 
-- ยังไม่สั่ง Servo จริง
-- ใช้ผลตรวจจับตำแหน่งลูกบอลแบบ Real-time
-- คำนวณ LQR, Linearized IK, Exact Leg IK แล้วพิมพ์ผลออกมา
+สถานะ (2026-09-28): สั่ง servo จริงผ่าน `run_real_balance.sh --confirm` (ต้องกด Enter ยืนยัน); ถ้ารัน `main.py` ตรงๆ
+โดยไม่ตั้ง `SERVO_OUTPUT=1` จะเป็น dry-run (คำนวณและพิมพ์ แต่ไม่ส่งคำสั่ง)
 
-## โครงสร้างไฟล์
+## โครงสร้างไฟล์หลัก
 
 ```text
 test_integrated_system/
-├── params.py            # พารามิเตอร์และ gain จาก calculated_lqr_ik_3rrs.ipynb
-├── ball_tracker.py      # OpenCV tracker (โหลด HSV/Calibration จาก ping_pong_tracker)
-├── lqr_controller.py    # LQR controller module
-├── kinematics.py        # Linearized IK + Exact 2-link Leg IK
-├── main.py              # Real-time loop + print output 2 โหมด
-└── README.md
+├── main.py                 # loop ควบคุม real-time (flag ทั้งหมด: main.py --help)
+├── run_real_balance.sh     # ตัวเรียกที่ปลอดภัย ใช้ตัวนี้สั่ง servo จริง (--profile=NAME ได้)
+├── demo_*.sh               # demo balance / circle / hexagon (เรียก profile ที่จูนแล้ว)
+├── run_experiment.sh       # การทดลองมาตรฐานบทที่ 4 (N รอบต่อ tag)
+├── experiment_profile.py   # ค่า standard + PROFILES ที่จูนแล้ว (ที่เดียวที่เก็บค่า)
+├── params.py               # พารามิเตอร์และ gain จาก state_space_control/calculated_lqr_ik_3rrs.ipynb
+├── ball_tracker.py         # ตัวตรวจจับ + กล้อง (อ่าน config จาก ping_pong_tracker)
+├── lqr_controller.py       # LQR controller
+├── kinematics.py           # Linearized IK + Exact 2-link Leg IK
+├── actuator.py             # ส่งคำสั่ง/อ่านตำแหน่ง servo (bus HX-35H)
+├── velocity_filter.py, friction_comp.py, path_tuning.py, dither.py   # ส่วนเสริมของตัวควบคุม
+├── run_metrics.py, analyze_runs.py, theory_limits.py                 # ให้คะแนน / วิเคราะห์ / ขีดจำกัด
+├── servo_calibration/      # calibrate servo 01–06
+├── tests/                  # pytest (ไม่ใช้ฮาร์ดแวร์)
+└── logs/                   # log ทุกรอบ
 ```
 
 ## Dependency
 
-ใช้ dependency เดียวกับโปรเจกต์ติดตามบอล
+ติดตั้งทั้งโปรเจกต์จาก root (ดู HANDOFF.md ข้อ 4):
 
 ```bash
-pip install -r ../ping_pong_tracker/requirements.txt
+cd /home/rpi5/capstone_design && ./setup_pi.sh --install
 ```
 
 ถ้ายังไม่ได้สร้างไฟล์ Calibration ให้ทำในโฟลเดอร์ ping_pong_tracker ก่อน
 
 - รัน 04_calibration.py เพื่อสร้าง calib_config.json
-- ระบบนี้จะอ่าน hsv_config.json และ calib_config.json จากโฟลเดอร์ ping_pong_tracker โดยอัตโนมัติ
+- ระบบนี้จะอ่าน detection_config.json และ calib_config.json จากโฟลเดอร์ ping_pong_tracker โดยอัตโนมัติ
 
 ## วิธีรัน
 
@@ -52,7 +61,7 @@ Actuator เริ่มต้นเป็น dry-run และมี confidence
 การเปิด output ไปยัง gateway ทำได้เฉพาะหลังตรวจ neutral/limits/sign แล้ว:
 
 ```bash
-SERVO_OUTPUT=1 SERVO_PORT=/dev/ttyUSB0 \
+SERVO_OUTPUT=1 SERVO_PORT=/dev/serial0 \
 /home/rpi5/capstone_design/.venv/bin/python main.py --headless
 ```
 

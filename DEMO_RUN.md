@@ -58,18 +58,19 @@ cd /home/rpi5/capstone_design/test_integrated_system
 
 ## ค่าที่ใช้ในแต่ละ demo (จูนเมื่อ 2026-09-28)
 
-ค่าร่วมทุก demo:
-`--k-scale=0.143 --kv-scale=1.80 --ta=0.11 --vel-ab=0.7,0.35 --friction-comp=0.6,2`
+ค่าอยู่ที่เดียวใน `test_integrated_system/experiment_profile.py` → `PROFILES` (พร้อม comment หลักฐานของแต่ละค่า)
+ดูได้ด้วย `python experiment_profile.py --list`
 
-| Demo | ค่าเพิ่มเติม | ผลจากการทดสอบ |
+| Demo | Profile | ผลจากการทดสอบ |
 |---|---|---|
-| Balance | `--trim-radius-cm=2` | ดึงบอลที่วางห่างกลาง 5–9 cm เข้ามาใกล้กลาง 2 cm ภายใน ~0.5–5 s; ผลักบอลออก 5 ครั้งดึงกลับได้ทุกครั้ง |
-| วงกลม (รัศมี 3 cm) | `--path-k-full=1.047,0.571,0.474 --dz-lead-deg=0.25` | tracking error ~1.3–1.5 cm, 14 รอบไม่แกว่งค้าง |
-| หกเหลี่ยม (รัศมีถึงมุม 3.46 cm) | `--path-k-full=1.047,0.571,0.474` (ไม่ใช้ dz-lead) | tracking error ~1.4–2.1 cm, ไม่แกว่งค้าง |
+| Balance | `tuned_balance` | ดึงบอลที่วางห่างกลาง 5–9 cm เข้ามาใกล้กลาง 2 cm ภายใน ~0.5–5 s; ผลักบอลออก 5 ครั้งดึงกลับได้ทุกครั้ง |
+| วงกลม (รัศมี 3 cm) | `tuned_circle` | tracking error ~1.3–1.5 cm, 14 รอบไม่แกว่งค้าง |
+| หกเหลี่ยม (รัศมีถึงมุม 3.46 cm) | `tuned_hexagon` | tracking error ~1.4–2.1 cm, ไม่แกว่งค้าง |
 
-- ค่า standard ใน `experiment_profile.py` ไม่ได้เปลี่ยน ค่าที่จูนแล้วอยู่ในไฟล์ `demo_*.sh` แต่ละตัว (มี comment บอกที่มา)
+- ค่า standard (ที่รายงานบทที่ 4 ใช้) ยังเป็นค่าเริ่มต้นของ `run_real_balance.sh` ไม่ได้เปลี่ยน
 - หกเหลี่ยมไม่ใช้ dz-lead เพราะทั้ง 0.25° และ 0.40° ทำให้แกว่งค้างจนบอลหลุดเป็นครั้งคราว
 - dz-lead ของวงกลมเกิน ~0.4° จะเริ่มแกว่งค้าง (0.70° แกว่งที่ 0.74 Hz)
+- รายละเอียดทั้งหมด: [HANDOFF.md](HANDOFF.md)
 
 ## วิดีโอและกราฟสำหรับนำเสนอ
 
