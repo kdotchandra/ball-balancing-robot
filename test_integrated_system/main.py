@@ -12,7 +12,6 @@ import cv2
 import numpy as np
 
 from ball_tracker import BallTracker, probe_cameras
-from kinematics import all_legs_exact_ik, linearized_ik
 from lqr_controller import LQRController
 from params import HOLD_LAST_TIMEOUT_S, K_AXIS, TA, VEL_LIMIT_MPS
 from params import SERVO_MAX, SERVO_MIN, SERVO_NEUTRAL
@@ -43,32 +42,6 @@ def clip_velocity(v: float) -> float:
     return float(np.clip(v, -VEL_LIMIT_MPS, VEL_LIMIT_MPS))
 
 
-def build_observation(
-    x_m: float,
-    theta_x_cmd: float,
-    q_lin_deg: np.ndarray,
-    q1_exact_deg: np.ndarray,
-) -> str:
-    notes = []
-    if abs(x_m) > 0.005:
-        if x_m > 0 and theta_x_cmd > 0:
-            notes.append("dir:OK")
-        elif x_m < 0 and theta_x_cmd < 0:
-            notes.append("dir:OK")
-        else:
-            notes.append("dir:NG")
-
-    max_diff = float(np.max(np.abs(q_lin_deg - q1_exact_deg)))
-    if max_diff < 3.0:
-        notes.append(f"ik:{max_diff:.2f}deg")
-    else:
-        notes.append(f"ik:{max_diff:.2f}deg*")
-
-    return ", ".join(notes) if notes else "-"
-
-
-def _fmt_triplet(values: np.ndarray) -> str:
-    return f"[{values[0]:+5.1f},{values[1]:+5.1f},{values[2]:+5.1f}]"
 
 
 def print_status_line(line: str) -> None:
@@ -151,49 +124,6 @@ def write_run_meta(log_path: Path | None, meta: dict) -> None:
         print(f"[Startup] could not write the run sidecar: {exc}")
 
 
-def print_balance_line(
-    x_m: float,
-    y_m: float,
-    theta_x_cmd: float,
-    theta_y_cmd: float,
-    q_lin_deg: np.ndarray,
-    q1_exact_deg: np.ndarray,
-    q1_exact_dev_deg: np.ndarray,
-    obs: str,
-) -> None:
-    text = (
-        f"[BAL] x={x_m * 1000:+6.1f} mm y={y_m * 1000:+6.1f} mm | "
-        f"tilt_cmd(deg) tx={deg(theta_x_cmd):+.2f} ty={deg(theta_y_cmd):+.2f} | "
-        f"q_lin(deg) [{q_lin_deg[0]:+.2f}, {q_lin_deg[1]:+.2f}, {q_lin_deg[2]:+.2f}] | "
-        f"q1_exact(deg) [{q1_exact_deg[0]:+.2f}, {q1_exact_deg[1]:+.2f}, {q1_exact_deg[2]:+.2f}] | "
-        f"q1_exact_dev(deg) [{q1_exact_dev_deg[0]:+.2f}, {q1_exact_dev_deg[1]:+.2f}, {q1_exact_dev_deg[2]:+.2f}] | "
-        f"obs: {obs}"
-    )
-    print(text)
-
-
-def print_tracking_line(
-    x_m: float,
-    y_m: float,
-    x_ref: float,
-    y_ref: float,
-    err: float,
-    theta_x_cmd: float,
-    theta_y_cmd: float,
-    q_lin_deg: np.ndarray,
-    q1_exact_deg: np.ndarray,
-    q1_exact_dev_deg: np.ndarray,
-    obs: str,
-) -> None:
-    text = (
-        f"[TRK] x={x_m * 1000:+6.1f} y={y_m * 1000:+6.1f} mm | ref=({x_ref * 1000:+6.1f},{y_ref * 1000:+6.1f}) mm | "
-        f"err={err * 1000:5.1f} mm | tilt_cmd(deg) tx={deg(theta_x_cmd):+.2f} ty={deg(theta_y_cmd):+.2f} | "
-        f"q_lin(deg) [{q_lin_deg[0]:+.2f}, {q_lin_deg[1]:+.2f}, {q_lin_deg[2]:+.2f}] | "
-        f"q1_exact(deg) [{q1_exact_deg[0]:+.2f}, {q1_exact_deg[1]:+.2f}, {q1_exact_deg[2]:+.2f}] | "
-        f"q1_exact_dev(deg) [{q1_exact_dev_deg[0]:+.2f}, {q1_exact_dev_deg[1]:+.2f}, {q1_exact_dev_deg[2]:+.2f}] | "
-        f"obs: {obs}"
-    )
-    print(text)
 
 
 def draw_overlay(
@@ -510,8 +440,6 @@ def run(
         xi_y = 0.0
         previous_phase = PHASE_NONE
 
-        neutral_exact = all_legs_exact_ik(phi=0.0, theta=0.0)
-        neutral_q1 = np.array([item[0] for item in neutral_exact], dtype=float)
 
         print(f"Starting integrated test ({'hardware output enabled' if actuator.enabled else 'dry-run; no servo output'})")
         print("Controls: Q=quit, M=toggle mode" if not headless else "Headless mode: use Ctrl+C to quit")
@@ -661,15 +589,6 @@ def run(
             theta_x_actual = float(np.clip(theta_x_actual, tilt_x_min_rad, tilt_x_max_rad))
             theta_y_actual = float(np.clip(theta_y_actual, tilt_y_min_rad, tilt_y_max_rad))
 
-            z_ref, q_lin = linearized_ik(phi=theta_y_cmd, theta=theta_x_cmd, h=0.0)
-            exact = all_legs_exact_ik(phi=theta_y_cmd, theta=theta_x_cmd)
-
-            q_lin_deg = np.rad2deg(q_lin)
-            q1_exact_rad = np.array([item[0] for item in exact], dtype=float)
-            q1_exact_deg = np.rad2deg(q1_exact_rad)
-            q1_exact_dev_deg = np.rad2deg(q1_exact_rad - neutral_q1)
-            servo_error_deg = q1_exact_dev_deg - q_lin_deg
-            _ = z_ref  # kept for clarity and future actuator command output.
             if control_valid:
                 servo_x, servo_y = theta_x_actuate, theta_y_actuate
                 if plate_dither is not None:
@@ -745,29 +664,20 @@ def run(
                     end_reason = "never_tracked"
                     break
 
-            obs = build_observation(x_m, theta_x_cmd, q_lin_deg, q1_exact_dev_deg)
             if now - last_print_t >= PRINT_INTERVAL_S:
+                servo_txt = " ".join(f"{int(v):3d}" for v in safe_positions)
+                tilt_txt = f"tilt=({deg(theta_x_cmd):+5.1f},{deg(theta_y_cmd):+5.1f}) deg  servo=[{servo_txt}]"
                 if not control_valid and now - last_detect_t > LOST_NEUTRAL_TIMEOUT_S:
                     line = "[LOST] Ball unavailable; output neutralized; waiting for reacquisition"
-                elif mode == 1:
-                    line = (
-                        f"[BAL] xy=({x_m * 1000:+6.1f},{y_m * 1000:+6.1f})mm "
-                        f"tilt=({deg(theta_x_cmd):+5.1f},{deg(theta_y_cmd):+5.1f})deg "
-                        f"servo_cmd={_fmt_triplet(q_lin_deg)} "
-                        f"servo_theory={_fmt_triplet(q1_exact_dev_deg)} "
-                        f"servo_err={_fmt_triplet(servo_error_deg)} "
-                        f"obs:{obs}"
-                    )
+                elif path_phase in (PHASE_NONE, 1):   # balance run, or the hold phase of a path run
+                    label = "[HOLD]" if path_phase == 1 else "[BAL] "
+                    line = (f"{label} ball=({x_m * 1000:+6.1f},{y_m * 1000:+6.1f}) mm  "
+                            f"dist={math.hypot(x_m - x_ref, y_m - y_ref) * 1000:5.1f} mm  {tilt_txt}")
                 else:
-                    err = math.hypot(x_m - x_ref, y_m - y_ref)
-                    line = (
-                        f"[TRK] xy=({x_m * 1000:+6.1f},{y_m * 1000:+6.1f})mm ref=({x_ref * 1000:+6.1f},{y_ref * 1000:+6.1f})mm "
-                        f"err={err * 1000:5.1f}mm tilt=({deg(theta_x_cmd):+5.1f},{deg(theta_y_cmd):+5.1f})deg "
-                        f"servo_cmd={_fmt_triplet(q_lin_deg)} "
-                        f"servo_theory={_fmt_triplet(q1_exact_dev_deg)} "
-                        f"servo_err={_fmt_triplet(servo_error_deg)} "
-                        f"obs:{obs}"
-                    )
+                    label = {2: "[RAMP]", 3: "[PATH]"}.get(path_phase, "[TRK] ")
+                    line = (f"{label} ball=({x_m * 1000:+6.1f},{y_m * 1000:+6.1f}) mm  "
+                            f"ref=({x_ref * 1000:+6.1f},{y_ref * 1000:+6.1f}) mm  "
+                            f"err={math.hypot(x_m - x_ref, y_m - y_ref) * 1000:5.1f} mm  {tilt_txt}")
                 print_status_line(line)
                 last_print_t = now
 
