@@ -291,6 +291,7 @@ def run(
     dither: tuple[float, float] | None = None,
     friction_comp: tuple[float, float] | None = None,
     trim_radius_m: float = TRIM_ACTIVE_RADIUS_M,
+    profile_name: str = "",
     path: str = "none",
     path_period_s: float = PROF.PATH_PERIOD_S,
     path_hold_s: float = PROF.PATH_HOLD_S,
@@ -458,7 +459,7 @@ def run(
             "path_k_full": [float(v) for v in k_path] if k_path is not None else None, "ta_s": ta_s, "vel_ab": list(vel_ab) if vel_ab is not None else None,
             "dither": list(dither) if dither is not None else None,
             "friction_comp": list(friction_comp) if friction_comp is not None else None,
-            "trim_radius_m": trim_radius_m, "trim_ki": trim_ki, "trim_init_deg": list(trim_init_deg), "path_ki": path_ki, "path_trim_ki": path_trim_ki,
+            "trim_radius_m": trim_radius_m, "profile": profile_name or None, "trim_ki": trim_ki, "trim_init_deg": list(trim_init_deg), "path_ki": path_ki, "path_trim_ki": path_trim_ki,
             "dz_lead_deg": dz_lead_deg, "tilt_limit_deg": tilt_limit_deg,
             "command_period_s": actuator.command_period, "move_ms": actuator.move_ms,
             "servo_output": bool(actuator.enabled), "servo_feedback_log": bool(actuator.feedback_log), "duration_s_requested": duration_s,
@@ -968,6 +969,12 @@ def parse_args() -> argparse.Namespace:
              "than V0 (fades to 0 at V0), e.g. 0.6,2; use with --vel-ab (default: off)",
     )
     parser.add_argument(
+        "--profile",
+        default="",
+        help="Name of the experiment_profile.PROFILES entry the launcher expanded into flags; recorded in the "
+             "run's sidecar only (the flags themselves carry the values)",
+    )
+    parser.add_argument(
         "--trim-radius-cm",
         type=float,
         default=TRIM_ACTIVE_RADIUS_M * 100.0,
@@ -1098,6 +1105,7 @@ if __name__ == "__main__":
             dither=args.dither,
             friction_comp=args.friction_comp,
             trim_radius_m=args.trim_radius_cm / 100.0,
+            profile_name=args.profile,
             path=args.path,
             path_period_s=args.path_period_s,
             path_hold_s=args.path_hold_s,

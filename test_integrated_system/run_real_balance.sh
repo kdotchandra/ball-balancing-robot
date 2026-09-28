@@ -43,6 +43,25 @@ COMMAND_PERIOD="$PROFILE_COMMAND_PERIOD"
 MOVE_MS="$PROFILE_MOVE_MS"
 CONFIRMED=0
 
+# --profile=NAME (experiment_profile.PROFILES) expands to that profile's flags, placed BEFORE the other
+# arguments so any flag given explicitly still overrides a single profile value.
+PROFILE_NAME=""
+REST_ARGS=()
+for argument in "$@"; do
+    case "$argument" in
+        --profile=*) PROFILE_NAME="${argument#*=}" ;;
+        *) REST_ARGS+=("$argument") ;;
+    esac
+done
+if [[ -n "$PROFILE_NAME" ]]; then
+    if ! PROFILE_FLAGS="$("$VENV_PYTHON" "$PROJECT_ROOT/test_integrated_system/experiment_profile.py" --flags "$PROFILE_NAME")"; then
+        echo "Unknown --profile=$PROFILE_NAME (see: python experiment_profile.py --list)"
+        exit 2
+    fi
+    read -r -a PROFILE_ARGS <<< "$PROFILE_FLAGS"
+    set -- "${PROFILE_ARGS[@]}" "${REST_ARGS[@]}"
+fi
+
 for argument in "$@"; do
     case "$argument" in
         --confirm)
@@ -137,7 +156,7 @@ for argument in "$@"; do
             ;;
         *)
             echo "Unknown argument: $argument"
-            echo "Usage: $0 --confirm [--tilt-limit-deg=DEGREES] [--max-tilt-rate-deg-s=RATE] [--trim-ki=KI] [--trim-init-deg=X,Y] [--detector=old|bgsub] [--save-frames=N] [--k-scale=S] [--kv-scale=V] [--k-full=K1,K2,K3] [--path-k-full=K1,K2,K3] [--ta=SEC] [--vel-ab=ALPHA,BETA] [--dither=AMP_DEG,FREQ_HZ] [--friction-comp=U_DEG,V0_CMS] [--trim-radius-cm=CM] [--command-period=SEC] [--move-ms=MS] [--path=circle|ellipse|hexagon] [--path-ki=KI] [--tag=NAME] [--path-size-cm=CM] [--path-period-s=S] [--path-hold-s=S] [--path-ramp-s=S] [--duration-s=S] [--path-trim-ki=KI] [--dz-lead-deg=DEG] [--record-video] [--log-servo-feedback]"
+            echo "Usage: $0 --confirm [--profile=NAME] [--tilt-limit-deg=DEGREES] [--max-tilt-rate-deg-s=RATE] [--trim-ki=KI] [--trim-init-deg=X,Y] [--detector=old|bgsub] [--save-frames=N] [--k-scale=S] [--kv-scale=V] [--k-full=K1,K2,K3] [--path-k-full=K1,K2,K3] [--ta=SEC] [--vel-ab=ALPHA,BETA] [--dither=AMP_DEG,FREQ_HZ] [--friction-comp=U_DEG,V0_CMS] [--trim-radius-cm=CM] [--command-period=SEC] [--move-ms=MS] [--path=circle|ellipse|hexagon] [--path-ki=KI] [--tag=NAME] [--path-size-cm=CM] [--path-period-s=S] [--path-hold-s=S] [--path-ramp-s=S] [--duration-s=S] [--path-trim-ki=KI] [--dz-lead-deg=DEG] [--record-video] [--log-servo-feedback]"
             exit 2
             ;;
     esac
@@ -145,7 +164,7 @@ done
 
 if [[ "$CONFIRMED" != "1" ]]; then
     echo "Refusing real servo output. Add --confirm after checking the mechanism and emergency power cutoff."
-    echo "Usage: $0 --confirm [--tilt-limit-deg=DEGREES] [--max-tilt-rate-deg-s=RATE] [--trim-ki=KI] [--trim-init-deg=X,Y] [--detector=old|bgsub] [--save-frames=N] [--k-scale=S] [--kv-scale=V] [--k-full=K1,K2,K3] [--path-k-full=K1,K2,K3] [--ta=SEC] [--vel-ab=ALPHA,BETA] [--dither=AMP_DEG,FREQ_HZ] [--friction-comp=U_DEG,V0_CMS] [--trim-radius-cm=CM] [--command-period=SEC] [--move-ms=MS] [--path=circle|ellipse|hexagon] [--path-ki=KI] [--tag=NAME] [--path-size-cm=CM] [--path-period-s=S] [--path-hold-s=S] [--path-ramp-s=S] [--duration-s=S] [--path-trim-ki=KI] [--dz-lead-deg=DEG] [--record-video] [--log-servo-feedback]"
+    echo "Usage: $0 --confirm [--profile=NAME] [--tilt-limit-deg=DEGREES] [--max-tilt-rate-deg-s=RATE] [--trim-ki=KI] [--trim-init-deg=X,Y] [--detector=old|bgsub] [--save-frames=N] [--k-scale=S] [--kv-scale=V] [--k-full=K1,K2,K3] [--path-k-full=K1,K2,K3] [--ta=SEC] [--vel-ab=ALPHA,BETA] [--dither=AMP_DEG,FREQ_HZ] [--friction-comp=U_DEG,V0_CMS] [--trim-radius-cm=CM] [--command-period=SEC] [--move-ms=MS] [--path=circle|ellipse|hexagon] [--path-ki=KI] [--tag=NAME] [--path-size-cm=CM] [--path-period-s=S] [--path-hold-s=S] [--path-ramp-s=S] [--duration-s=S] [--path-trim-ki=KI] [--dz-lead-deg=DEG] [--record-video] [--log-servo-feedback]"
     exit 2
 fi
 
@@ -276,14 +295,17 @@ differs "$SAVE_FRAMES" "$PROFILE_SAVE_FRAMES" && OVERRIDES+=" save-frames=${SAVE
 differs "$COMMAND_PERIOD" "$PROFILE_COMMAND_PERIOD" && OVERRIDES+=" command-period=${COMMAND_PERIOD}"
 differs "$MOVE_MS" "$PROFILE_MOVE_MS" && OVERRIDES+=" move-ms=${MOVE_MS}"
 differs "$PATH_KI" "$PROFILE_PATH_KI" && OVERRIDES+=" path-ki=${PATH_KI}"
+[[ -n "$DZ_LEAD_DEG" ]] && differs "$DZ_LEAD_DEG" 0 && OVERRIDES+=" dz-lead-deg=${DZ_LEAD_DEG}"
+[[ -n "$PATH_TRIM_KI" ]] && OVERRIDES+=" path-trim-ki=${PATH_TRIM_KI}"
 [[ -n "$K_FULL" ]] && echo "Gains: K = [${K_FULL}] set directly (--k-full; k-scale/kv-scale below are not used)"
-echo "Profile: balance gain set  k=${K_SCALE:-$PROFILE_K_SCALE} kv=${KV_SCALE:-$PROFILE_KV_SCALE}  trim-ki=${TRIM_KI:-$PROFILE_TRIM_KI}  tilt limit=${TILT_LIMIT_DEG:-$PROFILE_TILT_LIMIT_DEG} deg"
+echo "Gain set: k=${K_SCALE:-$PROFILE_K_SCALE} kv=${KV_SCALE:-$PROFILE_KV_SCALE}  trim-ki=${TRIM_KI:-$PROFILE_TRIM_KI}  tilt limit=${TILT_LIMIT_DEG:-$PROFILE_TILT_LIMIT_DEG} deg"
 echo "Servo timing: command every ${COMMAND_PERIOD} s, move time ${MOVE_MS} ms"
 if [[ -z "$OVERRIDES" ]]; then
     echo "Overrides: none (standard test configuration)"
 else
     echo "Overrides:${OVERRIDES}   <-- NOT the standard test configuration"
 fi
+[[ -n "$PROFILE_NAME" ]] && echo "Profile: ${PROFILE_NAME} ($("$VENV_PYTHON" "$PROJECT_ROOT/test_integrated_system/experiment_profile.py" --flags "$PROFILE_NAME"))"
 [[ -n "$TAG" ]] && echo "Tag: ${TAG}"
 [[ "$SERVO_FEEDBACK_LOG" == 1 ]] && echo "Servo feedback: measured positions logged (servoN_fb); commands may wait up to ~8 ms for the bus"
 if [[ -n "$PATH_SHAPE" ]]; then
@@ -401,4 +423,5 @@ exec env \
     SERVO_MAX_DELTA=35 \
     "$VENV_PYTHON" main.py \
     --headless \
+    ${PROFILE_NAME:+--profile "$PROFILE_NAME"} \
     "${TILT_ARGS[@]}"
