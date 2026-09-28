@@ -162,7 +162,7 @@ def print_balance_line(
     obs: str,
 ) -> None:
     text = (
-        f"[BAL] x={x_m:+.4f} m y={y_m:+.4f} m | "
+        f"[BAL] x={x_m * 1000:+6.1f} mm y={y_m * 1000:+6.1f} mm | "
         f"tilt_cmd(deg) tx={deg(theta_x_cmd):+.2f} ty={deg(theta_y_cmd):+.2f} | "
         f"q_lin(deg) [{q_lin_deg[0]:+.2f}, {q_lin_deg[1]:+.2f}, {q_lin_deg[2]:+.2f}] | "
         f"q1_exact(deg) [{q1_exact_deg[0]:+.2f}, {q1_exact_deg[1]:+.2f}, {q1_exact_deg[2]:+.2f}] | "
@@ -186,8 +186,8 @@ def print_tracking_line(
     obs: str,
 ) -> None:
     text = (
-        f"[TRK] x={x_m:+.4f} y={y_m:+.4f} m | ref=({x_ref:+.4f},{y_ref:+.4f}) m | "
-        f"err={err:.4f} m | tilt_cmd(deg) tx={deg(theta_x_cmd):+.2f} ty={deg(theta_y_cmd):+.2f} | "
+        f"[TRK] x={x_m * 1000:+6.1f} y={y_m * 1000:+6.1f} mm | ref=({x_ref * 1000:+6.1f},{y_ref * 1000:+6.1f}) mm | "
+        f"err={err * 1000:5.1f} mm | tilt_cmd(deg) tx={deg(theta_x_cmd):+.2f} ty={deg(theta_y_cmd):+.2f} | "
         f"q_lin(deg) [{q_lin_deg[0]:+.2f}, {q_lin_deg[1]:+.2f}, {q_lin_deg[2]:+.2f}] | "
         f"q1_exact(deg) [{q1_exact_deg[0]:+.2f}, {q1_exact_deg[1]:+.2f}, {q1_exact_deg[2]:+.2f}] | "
         f"q1_exact_dev(deg) [{q1_exact_dev_deg[0]:+.2f}, {q1_exact_dev_deg[1]:+.2f}, {q1_exact_dev_deg[2]:+.2f}] | "
@@ -224,11 +224,11 @@ def draw_overlay(
     lines = [
         f"Mode: {'BALANCE' if mode == 1 else 'TRACKING'} (press M to toggle)",
         f"Detected: {'YES' if detected else 'NO'}",
-        f"Ball (m): x={x_m:+.4f}, y={y_m:+.4f}",
+        f"Ball (mm): x={x_m * 1000:+6.1f}, y={y_m * 1000:+6.1f}",
         f"Tilt cmd (deg): tx={deg(theta_x_cmd):+.2f}, ty={deg(theta_y_cmd):+.2f}",
     ]
     if mode == 2:
-        lines.append(f"Ref (m): x_ref={x_ref:+.4f}, y_ref={y_ref:+.4f}")
+        lines.append(f"Ref (mm): x_ref={x_ref * 1000:+6.1f}, y_ref={y_ref * 1000:+6.1f}")
 
     y0 = 24
     for i, line in enumerate(lines):
@@ -751,7 +751,7 @@ def run(
                     line = "[LOST] Ball unavailable; output neutralized; waiting for reacquisition"
                 elif mode == 1:
                     line = (
-                        f"[BAL] xy=({x_m:+.3f},{y_m:+.3f})m "
+                        f"[BAL] xy=({x_m * 1000:+6.1f},{y_m * 1000:+6.1f})mm "
                         f"tilt=({deg(theta_x_cmd):+5.1f},{deg(theta_y_cmd):+5.1f})deg "
                         f"servo_cmd={_fmt_triplet(q_lin_deg)} "
                         f"servo_theory={_fmt_triplet(q1_exact_dev_deg)} "
@@ -761,8 +761,8 @@ def run(
                 else:
                     err = math.hypot(x_m - x_ref, y_m - y_ref)
                     line = (
-                        f"[TRK] xy=({x_m:+.3f},{y_m:+.3f})m ref=({x_ref:+.3f},{y_ref:+.3f})m "
-                        f"err={err:.3f}m tilt=({deg(theta_x_cmd):+5.1f},{deg(theta_y_cmd):+5.1f})deg "
+                        f"[TRK] xy=({x_m * 1000:+6.1f},{y_m * 1000:+6.1f})mm ref=({x_ref * 1000:+6.1f},{y_ref * 1000:+6.1f})mm "
+                        f"err={err * 1000:5.1f}mm tilt=({deg(theta_x_cmd):+5.1f},{deg(theta_y_cmd):+5.1f})deg "
                         f"servo_cmd={_fmt_triplet(q_lin_deg)} "
                         f"servo_theory={_fmt_triplet(q1_exact_dev_deg)} "
                         f"servo_err={_fmt_triplet(servo_error_deg)} "
