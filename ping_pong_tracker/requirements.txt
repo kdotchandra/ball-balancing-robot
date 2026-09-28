@@ -1,3 +1,4 @@
+# Early tracker-only list. The whole project now installs from ../requirements.txt (see ../setup_pi.sh).
 opencv-python>=4.8.0
 numpy>=1.24.0
 pygrabber>=0.2; sys_platform == "win32"
