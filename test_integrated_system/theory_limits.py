@@ -48,6 +48,34 @@ MEASURED = {
                    "with a 250 ms servo ramp included. Expected range "
                    f"{ST.DELAY_RANGE_S[0]:g}-{ST.DELAY_RANGE_S[1]:g} s; test_freq_response.py measures it"),
     "detection_noise": (0.75, "mm", "high-frequency spread of x_m/y_m while the ball is at rest"),
+
+    # ---- measured 2026-09-27/28 with --log-servo-feedback (servo positions read back while balancing) ----
+    # These describe the hardware for further tuning (experiment_profile.PROFILES uses them). They are NOT
+    # used for the chapter-4 targets above: those keep the values they were set with, so the report's
+    # numbers do not move. stability.DEFAULT_DELAY_S (0.13 s) is deliberately left as it was for the same reason.
+    "servo_time_constant": (0.11, "s", "servo command -> read-back position lag 125 ms minus ~15 ms age of the "
+                            "background read; tags presentation_room_servo_fb*, presentation_room_static_check "
+                            "(params.TA = 0.181 s is the datasheet value)"),
+    "delay_camera": (0.011, "s", "frame_age_s median in the run logs (sensor read-out to control loop)"),
+    "delay_vision": (0.014, "s", "BallTracker detection time per frame, timed on 200 recorded frames"),
+    "delay_command_hold": (0.033, "s", "commands go out every 2nd 33 ms frame (40 ms minimum period): half of 67 ms"),
+    "delay_servo": (0.110, "s", "same measurement as servo_time_constant"),
+    "delay_deadzone_reversal": (0.071, "s", "extra time for a servo to move 2 units after its command reverses "
+                                "(166 ms) versus continuing in the same direction (95 ms); 1107 / 824 events"),
+    "servo_deadband": (3.0, "units", "p90 |read-back - command| while the command is held >= 0.3 s "
+                       "(1 unit ~ 0.1 deg of plate tilt on servo 1)"),
+    "plant_gain_rolling": (0.113, "m/s^2/deg", "ball acceleration vs read-back plate tilt while rolling > 3 cm/s, "
+                           "joint fit of 383 samples with level offset and friction (model 0.6 g = 0.103)"),
+    "static_breakaway_min": (0.5, "deg", "plate tilt the ball stood still at: medians of 26 stuck episodes "
+                             "(>= 0.7 s, 6 runs) ran 0.5-2 deg, one reached 3.5 deg"),
+    "static_breakaway_max": (2.0, "deg", "see static_breakaway_min"),
+    "velocity_noise_raw": (31.0, "mm/s", "raw one-frame-difference velocity (std of the high-frequency part); "
+                           "0.4-1.1 deg of plate jitter through the velocity gain"),
+    "velocity_noise_alpha_beta": (6.2, "mm/s", "alpha-beta 0.7/0.35 replayed on the same logs, ~20 ms extra lag"),
+    "dz_lead_limit_cycle_circle": (0.70, "deg", "dead-zone lead where the circle fell into a 0.74 Hz limit cycle "
+                                   "(sweep_dz070_circle); 0-0.55 deg did not"),
+    "dz_lead_limit_cycle_hexagon": (0.25, "deg", "lowest dead-zone lead that sent the hexagon into a ~0.6-0.8 Hz "
+                                    "limit cycle (1 of 4 runs at 0.25, 1 of 5 at 0.40); none in 6 runs without it"),
 }
 
 

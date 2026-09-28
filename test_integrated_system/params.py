@@ -27,10 +27,10 @@ _Y_ANCHOR = RP * np.sin(PSI)
 J = np.vstack([_Y_ANCHOR, -_X_ANCHOR, np.ones(3)]).T
 JINV = np.linalg.inv(J)
 
-# LQR gain from notebook (do not re-compute). The source notebook
-# (calculated_lqr_ik_3rrs.ipynb) is not present in this repo, so the Q/R cost
-# matrices and A/B derivation behind this gain are not reviewable/reproducible
-# from source alone -- archive that notebook into the repo if still available.
+# LQR gain from notebook (do not re-compute). The derivation (A/B matrices, Bryson Q/R) is in
+# state_space_control/calculated_lqr_ik_3rrs.ipynb. TA above is the datasheet value used there; the
+# measured servo time constant and plant gain are in theory_limits.MEASURED, and the tuned gains that
+# the demos use are in experiment_profile.PROFILES.
 K_AXIS = np.array([5.235988, 1.853465, 1.529578], dtype=float)
 K_ACT = 0.055214863387  # m/rad, linearized at H0
 
