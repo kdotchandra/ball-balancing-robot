@@ -1,0 +1,34 @@
+
+Item	Specification
+Name	HX-35H serial bus high voltage servo
+Brand	Hiwonder
+Weight	52g
+Dimension	45.2 x 24.7 x 35mm
+Working voltage	9-12.6v
+Rotation speed	0.18sec / 60° 11.1v
+Rotation torque	25kg.cm 11.1v
+Static maximum torque	35kg.cm 11.1v
+Rotation range	0-240°
+No-load current	100mA
+Stall current	3A
+Servo accuracy	0.3°
+Controllable angle range	0-1000,corresponding to 0-240°
+Control method	UART serial command
+Communication baud rate	115200
+Storage	save data when power off
+Servo ID	can be set to 0-253.1 by default
+Angle read back function	support
+Protection	avoid stalling and overheat
+Data feedback	temperature, voltage, position
+Working mode	servo mode and gear motor mode
+Gear tape	metal gear
+Servo wire length	20cm
+Connector	5264-3P
+Applicable to	joints of bionic robots
+Package List	1* HX-35H servo
+1* Plastic main servo horn
+1* Plastic assistant servo horn
+1* Servo wire (20cm)
+1* Screw bag
+1* Servo bracket pack (optional)
+1* Metal servo horn pack (optional)

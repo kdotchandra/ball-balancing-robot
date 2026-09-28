@@ -1,0 +1,60 @@
+{
+  "tag": "demo_hexagon_20260928_212847",
+  "mode": "path",
+  "shape": "hexagon",
+  "path_size_cm": 4.5,
+  "path_period_s": 20.0,
+  "gains": [
+    0.143,
+    1.8
+  ],
+  "k_full": null,
+  "k_effective": [
+    0.748746,
+    0.477082,
+    0.21873
+  ],
+  "path_k_full": [
+    1.047,
+    0.571,
+    0.474
+  ],
+  "ta_s": 0.11,
+  "vel_ab": [
+    0.7,
+    0.35
+  ],
+  "dither": null,
+  "friction_comp": [
+    0.6,
+    2.0
+  ],
+  "trim_radius_m": 0.1,
+  "trim_ki": 0.125,
+  "trim_init_deg": [
+    0.0,
+    0.0
+  ],
+  "path_ki": 0.0,
+  "path_trim_ki": null,
+  "dz_lead_deg": 0.0,
+  "tilt_limit_deg": 8.0,
+  "command_period_s": 0.04,
+  "move_ms": 50,
+  "servo_output": true,
+  "servo_feedback_log": false,
+  "duration_s_requested": 50.0,
+  "profile_overrides": [
+    "k_scale",
+    "kv_scale",
+    "ta_s",
+    "path_k_full",
+    "vel_ab",
+    "friction_comp"
+  ],
+  "started_utc": "2026-09-28T14:28:51Z",
+  "ended_reason": "completed",
+  "valid_attempt": true,
+  "video": "video_20260928T142849Z.mp4",
+  "duration_s_actual": 52.92
+}

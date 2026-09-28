@@ -1,0 +1,30 @@
+{
+  "tag": "fullgain_lqr",
+  "mode": "balance",
+  "shape": "",
+  "path_size_cm": null,
+  "path_period_s": null,
+  "gains": [
+    1.0,
+    1.0
+  ],
+  "trim_ki": 0.0,
+  "path_ki": 0.0,
+  "path_trim_ki": null,
+  "dz_lead_deg": 0.0,
+  "tilt_limit_deg": 8.0,
+  "command_period_s": 0.04,
+  "move_ms": 50,
+  "servo_output": true,
+  "duration_s_requested": 20.0,
+  "profile_overrides": [
+    "k_scale",
+    "kv_scale",
+    "trim_ki"
+  ],
+  "started_utc": "2026-09-26T02:32:38Z",
+  "ended_reason": "never_tracked",
+  "valid_attempt": false,
+  "video": "video_20260926T023236Z.mp4",
+  "duration_s_actual": 32.86
+}

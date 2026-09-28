@@ -1,0 +1,71 @@
+{
+  "servo_ids": [
+    1,
+    2,
+    3
+  ],
+  "position_sign": [
+    -1,
+    -1,
+    -1
+  ],
+  "axis_mapping": {
+    "tilt_x": [
+      2.26,
+      -1.13,
+      -1.13
+    ],
+    "tilt_y": [
+      0.0,
+      -1.96,
+      1.96
+    ]
+  },
+  "neutral_reference": [
+    525,
+    485,
+    505
+  ],
+  "test_step_counts": 10,
+  "status": "mapping_measured",
+  "observations": [
+    {
+      "servo_id": 1,
+      "position": 525,
+      "offset": 10,
+      "observation": ""
+    },
+    {
+      "servo_id": 1,
+      "position": 515,
+      "offset": -10,
+      "observation": ""
+    },
+    {
+      "servo_id": 2,
+      "position": 486,
+      "offset": 10,
+      "observation": ""
+    },
+    {
+      "servo_id": 2,
+      "position": 475,
+      "offset": -10,
+      "observation": ""
+    },
+    {
+      "servo_id": 3,
+      "position": 507,
+      "offset": 10,
+      "observation": ""
+    },
+    {
+      "servo_id": 3,
+      "position": 495,
+      "offset": -10,
+      "observation": ""
+    }
+  ],
+  "measured_at_utc": "2026-09-22T21:42:40.962459+00:00",
+  "tilt_y_edit_note": "2026-09-24: servo 3 sign of tilt_y changed [0.0, -1.96, -1.96] -> [0.0, -1.96, 1.96]. A pure y tilt moves servos 2 and 3 in opposite directions (geometry: k*J_phi, orthogonal to tilt_x); logs showed servo2-servo3 constant, i.e. y tilt never actuated. Original: servo_mapping.json.bak_before_tilt_y_fix"
+}

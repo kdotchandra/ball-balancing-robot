@@ -1,0 +1,17 @@
+# Python environment and caches
+.venv/
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
+
+# Run logs: only the per-run data (CSV + JSON sidecar) and the small tilt/detection test CSVs are tracked.
+# Debug frames, videos, presentation output, figures and the report stay on disk but out of git.
+test_integrated_system/logs/*
+!test_integrated_system/logs/run_*.csv
+!test_integrated_system/logs/run_*.json
+!test_integrated_system/logs/tilt_test_*.csv
+!test_integrated_system/logs/detect_*.csv
+
+# Early camera-test logs and unused flat-field calibration files
+ping_pong_tracker/logs/
+*.npz

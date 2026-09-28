@@ -1,0 +1,20 @@
+{
+  "threshold_mode": "bright",
+  "min_confidence": 0.45,
+  "gray_min": 160,
+  "gray_max": 255,
+  "blur_kernel": 7,
+  "morph_kernel": 5,
+  "hough_min_radius": 32,
+  "hough_max_radius": 48,
+  "expected_radius": 40,
+  "min_inner_fill": 0.55,
+  "min_fill_contrast": 0.18,
+  "roi": {
+    "enabled": false,
+    "x": 0.08,
+    "y": 0.05,
+    "width": 0.84,
+    "height": 0.9
+  }
+}

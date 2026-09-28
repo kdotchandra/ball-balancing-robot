@@ -1,0 +1,31 @@
+{
+  "tag": "demo_balance_20260927_162313",
+  "mode": "balance",
+  "shape": "",
+  "path_size_cm": null,
+  "path_period_s": null,
+  "gains": [
+    0.076,
+    2.8
+  ],
+  "trim_ki": 0.125,
+  "trim_init_deg": [
+    0.0,
+    0.0
+  ],
+  "path_ki": 0.0,
+  "path_trim_ki": null,
+  "dz_lead_deg": 0.0,
+  "tilt_limit_deg": 8.0,
+  "command_period_s": 0.04,
+  "move_ms": 50,
+  "servo_output": true,
+  "servo_feedback_log": false,
+  "duration_s_requested": 30.0,
+  "profile_overrides": [],
+  "started_utc": "2026-09-27T09:23:16Z",
+  "ended_reason": "completed",
+  "valid_attempt": true,
+  "video": "video_20260927T092314Z.mp4",
+  "duration_s_actual": 32.92
+}

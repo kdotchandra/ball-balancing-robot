@@ -1,0 +1,58 @@
+{
+  "tag": "exp_c2_circle",
+  "mode": "path",
+  "shape": "circle",
+  "path_size_cm": 3.0,
+  "path_period_s": 20.0,
+  "gains": [
+    0.143,
+    1.8
+  ],
+  "k_full": null,
+  "k_effective": [
+    0.748746,
+    0.477082,
+    0.21873
+  ],
+  "path_k_full": [
+    1.047,
+    0.571,
+    0.474
+  ],
+  "ta_s": 0.11,
+  "vel_ab": [
+    0.7,
+    0.35
+  ],
+  "dither": [
+    0.5,
+    5.0
+  ],
+  "friction_comp": null,
+  "trim_ki": 0.125,
+  "trim_init_deg": [
+    0.0,
+    0.0
+  ],
+  "path_ki": 0.0,
+  "path_trim_ki": null,
+  "dz_lead_deg": 0.0,
+  "tilt_limit_deg": 8.0,
+  "command_period_s": 0.04,
+  "move_ms": 50,
+  "servo_output": true,
+  "servo_feedback_log": true,
+  "duration_s_requested": 50.0,
+  "profile_overrides": [
+    "k_scale",
+    "kv_scale",
+    "ta_s",
+    "path_k_full",
+    "vel_ab",
+    "dither"
+  ],
+  "started_utc": "2026-09-28T10:32:47Z",
+  "ended_reason": "completed",
+  "valid_attempt": true,
+  "duration_s_actual": 52.89
+}

@@ -1,0 +1,1 @@
+t_s,dt_s,mode,detected,control_valid,confidence,x_m,y_m,x_ref_m,y_ref_m,x_dot_mps,y_dot_mps,theta_x_cmd_deg,theta_y_cmd_deg,theta_x_actual_deg,theta_y_actual_deg,theta_x_actuate_deg,theta_y_actuate_deg,trim_x_deg,trim_y_deg,servo1,servo2,servo3,missed_frames,lost_neutralized,x_ref_dot_mps,y_ref_dot_mps,path_phase,xi_x_ms,xi_y_ms,frame_age_s,servo1_fb,servo2_fb,servo3_fb

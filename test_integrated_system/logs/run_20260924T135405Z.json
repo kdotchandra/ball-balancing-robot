@@ -1,0 +1,26 @@
+{
+  "tag": "invalid_balance",
+  "mode": "balance",
+  "shape": "",
+  "path_size_cm": null,
+  "path_period_s": null,
+  "gains": [
+    0.076,
+    2.8
+  ],
+  "trim_ki": 0.125,
+  "path_ki": 0.0,
+  "path_trim_ki": null,
+  "dz_lead_deg": 0.0,
+  "tilt_limit_deg": 8.0,
+  "command_period_s": 0.04,
+  "move_ms": 50,
+  "servo_output": true,
+  "duration_s_requested": 30.0,
+  "profile_overrides": [],
+  "started_utc": "2026-09-24T13:54:07Z",
+  "ended_reason": "completed",
+  "valid_attempt": true,
+  "duration_s_actual": 32.93,
+  "note": "not a valid trial: tracker locked onto the lamp at (-14.3,+2.1) cm for 796 frames (tag was 'balance')"
+}

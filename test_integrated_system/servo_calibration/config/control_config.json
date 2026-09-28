@@ -1,0 +1,5 @@
+{
+  "balance_reference_m": [0.0, 0.0],
+  "reference_radius_cm": 4.0,
+  "notes": "Set this to the measured stable ball position relative to the calibrated image center."
+}

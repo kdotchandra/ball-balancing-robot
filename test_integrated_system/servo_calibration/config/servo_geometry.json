@@ -1,0 +1,20 @@
+{
+  "link1_length_mm": 65.0,
+  "link2_length_mm": 112.0,
+  "acrylic_thickness_mm": 6.0,
+  "platform_offset_mm": 28.0,
+  "link1_angle_from_floor_deg": 25.0,
+  "neutral_position": [
+    441,
+    402,
+    423
+  ],
+  "h0_mm": 173.5,
+  "status": "neutral_position_measured",
+  "measured_at_utc": "2026-09-22T22:54:58.379741+00:00",
+  "floor_safe_reference": [
+    525,
+    486,
+    507
+  ]
+}

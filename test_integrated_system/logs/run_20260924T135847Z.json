@@ -1,0 +1,25 @@
+{
+  "tag": "circle",
+  "mode": "path",
+  "shape": "circle",
+  "path_size_cm": 3.0,
+  "path_period_s": 20.0,
+  "gains": [
+    0.076,
+    2.8
+  ],
+  "trim_ki": 0.125,
+  "path_ki": 0.0,
+  "path_trim_ki": null,
+  "dz_lead_deg": 0.0,
+  "tilt_limit_deg": 8.0,
+  "command_period_s": 0.04,
+  "move_ms": 50,
+  "servo_output": true,
+  "duration_s_requested": 60.0,
+  "profile_overrides": [],
+  "started_utc": "2026-09-24T13:58:50Z",
+  "ended_reason": "completed",
+  "valid_attempt": true,
+  "duration_s_actual": 62.92
+}
