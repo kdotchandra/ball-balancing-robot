@@ -17,9 +17,9 @@ and to move it along a circle or hexagon path.
 | Circle, 3 cm radius | Tracking error about 1.3–1.5 cm |
 | Hexagon, 3.46 cm to corner | Tracking error about 1.4–2.1 cm |
 
-<img src="docs/media/demo_circle.gif" width="400" alt="Overhead camera view: the ball follows a circular reference path">
+<img src="docs/media/demo_circle.gif" width="400" alt="Overhead camera view: the ball follows a circular reference path"> <img src="docs/media/demo_hexagon.gif" width="400" alt="Overhead camera view: the ball follows a hexagonal reference path">
 
-*Circle path, seen by the control camera: orange circle is the reference, blue is the detected ball and its recent path.*
+*Circle (left) and hexagon (right) paths, seen by the control camera: orange is the reference path, blue is the detected ball and its recent path.*
 
 ## How it works
 ```
