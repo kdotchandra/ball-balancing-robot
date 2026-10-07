@@ -32,8 +32,9 @@ Inverse kinematics is computed every loop for comparison and display only; it do
 
 ## Hardware
 - Raspberry Pi 5 (Raspberry Pi OS, Python)
-- OV9281 global-shutter camera, mounted above the plate
-- 3 x Hiwonder HX-35H bus servos
+- OV9281 global-shutter camera, mounted about 25 cm above the plate
+- 3 x Hiwonder HX-35H bus servos, driven from the Pi's UART through a Hiwonder BusLinker v3.0
+- 12 V 16.7 A power supply for the servos; the Pi has a separate supply
 - 3RRS mechanism with an acrylic plate and a 40 mm ping-pong ball
 
 ## Repository layout
@@ -56,3 +57,6 @@ python -m pytest test_integrated_system/tests
 - Stick-slip friction between the ball and the plate limits accuracy.
 - The camera only sees about +/-8 cm from the center.
 - Total loop delay is about 170 ms (camera, detection, command timing and servo response).
+
+## License
+MIT. See [LICENSE](LICENSE).

@@ -22,8 +22,10 @@
 | ส่วน | รายละเอียด |
 |---|---|
 | คอมพิวเตอร์ | Raspberry Pi 5, Raspberry Pi OS (Debian 13 trixie), Python 3.13 |
-| กล้อง | OV9281 mono (global shutter) ผ่าน picamera2, 1280×800 @ 30 fps, ติดด้านบนมองลงแผ่น, ภาพถูก mirror |
+| กล้อง | OV9281 mono (global shutter) ผ่าน picamera2, 1280×800 @ 30 fps, ติดด้านบนมองลงแผ่น สูงจากแผ่นประมาณ 25 cm, ภาพถูก mirror |
 | Servo | Hiwonder HX-35H bus servo ×3, UART half-duplex 115200 บน `/dev/serial0` (ttyAMA0) |
+| ต่อ Pi กับ servo bus | Pi TX → RX ของ Hiwonder BusLinker v3.0, Pi RX → TX ของ BusLinker (ไขว้กัน) → bus servo; ground ของ Pi และ BusLinker ต่อร่วมกัน (common GND) |
+| ไฟเลี้ยง | Servo: AC to DC power supply 12 V 16.7 A (ผ่าน BusLinker); Pi ใช้แหล่งจ่ายแยกต่างหาก |
 | กลไก | 3RRS, L1 65 mm, L2 112 mm, จุดยึดบนแผ่นรัศมี 120 mm, ฐาน 180 mm, neutral link-1 25° (`params.py`) |
 | แผ่น / บอล | อะคริลิก, ลูกปิงปอง 40 mm / 2.7 g |
 | ระยะที่กล้องเห็น | แนวตั้งประมาณ ±8 cm จากกลาง (บอลเริ่มถูกขอบภาพตัดที่ ~8 cm), แนวนอนกว้างกว่า |
@@ -74,6 +76,7 @@ cd /home/rpi5/capstone_design
 .venv/bin/python -m pytest test_integrated_system/tests   # ต้องผ่านทั้งหมด
 ```
 
+- notebooks ใน `state_space_control/` ต้องใช้ `scipy` และ `control` เพิ่ม (ไม่อยู่ใน requirements): `.venv/bin/pip install scipy control`
 - picamera2 มาจาก apt ไม่ใช่ pip; `ball_tracker.py` เติม `/usr/lib/python3/dist-packages` ให้เอง
 - เปิด serial: `raspi-config` → Interface Options → Serial Port: login shell **No**, hardware **Yes** แล้ว reboot; user ต้องอยู่ในกลุ่ม `dialout`
 - path ของโปรเจกต์ถูกเขียนตายตัวใน `run_real_balance.sh` (`/home/rpi5/capstone_design`) ถ้าย้ายที่ต้องแก้บรรทัด `PROJECT_ROOT`
@@ -137,6 +140,7 @@ cd /home/rpi5/capstone_design
 - **noise ความเร็วดิบ** 31 mm/s → มุมแผ่นกระตุก 0.4–1.1° ถ้าไม่กรอง
 - **dz-lead** เพิ่ม gain ที่คำสั่งเล็ก (≈ 4·lead/(π·A)) → เกินขอบแล้วแกว่งค้าง 0.6–0.8 Hz
 - phase margin ตามโมเดล (Ta 0.11, delay 58 ms, + dead zone): standard 75°/65°, tuned balance 66°/53°, path K 71°/56°
+- **ข้อมูลดิบ system identification ไม่อยู่ใน repo**: อยู่ใน microSD card ที่ส่งให้อาจารย์ที่ปรึกษาแล้ว ค่าใน `theory_limits.MEASURED` แต่ละค่ามี comment บอกแหล่งที่มา ถ้าต้องการข้อมูลดิบให้ติดต่ออาจารย์ที่ปรึกษา
 
 ## 10. ปัญหาที่รู้แล้ว
 
