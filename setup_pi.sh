@@ -101,7 +101,7 @@ PY
              test_integrated_system/servo_calibration/config/servo_geometry.json \
              test_integrated_system/servo_calibration/config/servo_limits.json \
              test_integrated_system/servo_calibration/config/servo_mapping.json; do
-        [[ -f "$f" ]] && ok "calibration $f" || bad "calibration $f missing (see HANDOFF.md, calibration order)"
+        [[ -f "$f" ]] && ok "calibration $f" || bad "calibration $f missing (see docs/HANDOFF.md, calibration order)"
     done
     free_gb="$(df -BG --output=avail "$ROOT" | tail -1 | tr -dc 0-9)"
     ((free_gb >= 5)) && ok "disk free ${free_gb} GB" || bad "disk free only ${free_gb} GB (videos and debug frames need space)"

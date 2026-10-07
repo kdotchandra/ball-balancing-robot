@@ -34,7 +34,8 @@ Arduino sketch ใน `servo_floor_threshold_reader/` และ `servo_manual_po
 
 ```
 capstone_design/
-├── HANDOFF.md, DEMO_RUN.md        เอกสาร (ไฟล์นี้ / วิธีรัน demo)
+├── README.md                      หน้าแรกของ repo (ภาษาอังกฤษ)
+├── docs/                          HANDOFF.md (ไฟล์นี้), DEMO_RUN.md (วิธีรัน demo)
 ├── setup_pi.sh                    ตรวจ/ติดตั้งเครื่อง
 ├── requirements.txt, -dev.txt     แพ็กเกจ Python
 ├── ping_pong_tracker/             งานกล้องช่วงแรก + config ที่ยังใช้อยู่
@@ -159,11 +160,10 @@ cd /home/rpi5/capstone_design
 
 ## 12. Git
 
-- repo อยู่ที่ `/home/rpi5/capstone_design` (branch `main`) ยังไม่มี remote
+- repo บน GitHub: https://github.com/kdotchandra/ball-balancing-robot (branch `main`); บนเครื่อง Pi อยู่ที่ `/home/rpi5/capstone_design`
 - ไม่เก็บ: `.venv/`, ภาพ debug `logs/frames_*`, วิดีโอ, `logs/presentation/` (อยู่บนดิสก์เครื่องนี้เท่านั้น — สำรองแยกถ้าต้องการ)
-- เพิ่ม remote แล้ว push:
+- clone ลงเครื่องใหม่:
   ```bash
-  git remote add origin git@github.com:<user>/<repo>.git
-  git push -u origin main
+  git clone https://github.com/kdotchandra/ball-balancing-robot.git /home/rpi5/capstone_design
   ```
 - ก่อน commit ทุกครั้ง: `.venv/bin/python -m pytest test_integrated_system/tests`

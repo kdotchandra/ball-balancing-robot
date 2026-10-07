@@ -15,3 +15,12 @@ test_integrated_system/logs/*
 # Early camera-test logs and unused flat-field calibration files
 ping_pong_tracker/logs/
 *.npz
+
+# Videos, archives and generated reports (keep the small README GIF in docs/media/ only)
+*.mp4
+*.avi
+*.mov
+*.mkv
+*.h264
+*.zip
+*.docx

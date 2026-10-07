@@ -2,8 +2,8 @@
 
 ระบบควบคุม ball-and-plate แบบ 3RRS: ตรวจจับลูกปิงปองจากกล้อง → LQR → servo HX-35H จริง
 
-> **เริ่มที่ [../HANDOFF.md](../HANDOFF.md)** (ภาพรวม, ติดตั้ง, calibrate, flag ทั้งหมด, ข้อค้นพบ, ปัญหาที่รู้แล้ว)
-> และ **[../DEMO_RUN.md](../DEMO_RUN.md)** (วิธีรัน demo) — README นี้เก็บรายละเอียดเดิมของการรัน `main.py` และการทดลองบทที่ 4
+> **เริ่มที่ [../docs/HANDOFF.md](../docs/HANDOFF.md)** (ภาพรวม, ติดตั้ง, calibrate, flag ทั้งหมด, ข้อค้นพบ, ปัญหาที่รู้แล้ว)
+> และ **[../docs/DEMO_RUN.md](../docs/DEMO_RUN.md)** (วิธีรัน demo) — README นี้เก็บรายละเอียดเดิมของการรัน `main.py` และการทดลองบทที่ 4
 
 สถานะ (2026-09-28): สั่ง servo จริงผ่าน `run_real_balance.sh --confirm` (ต้องกด Enter ยืนยัน); ถ้ารัน `main.py` ตรงๆ
 โดยไม่ตั้ง `SERVO_OUTPUT=1` จะเป็น dry-run (คำนวณและพิมพ์ แต่ไม่ส่งคำสั่ง)
@@ -31,7 +31,7 @@ test_integrated_system/
 
 ## Dependency
 
-ติดตั้งทั้งโปรเจกต์จาก root (ดู HANDOFF.md ข้อ 4):
+ติดตั้งทั้งโปรเจกต์จาก root (ดู docs/HANDOFF.md ข้อ 4):
 
 ```bash
 cd /home/rpi5/capstone_design && ./setup_pi.sh --install
