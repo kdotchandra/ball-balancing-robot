@@ -90,7 +90,7 @@ cd /home/rpi5/capstone_design/test_integrated_system/servo_calibration
 
 - `config/servo_limits.json`: floor threshold และ mechanical soft limits
 - `config/servo_geometry.json`: L1/L2, acrylic 6 mm, offset 28 mm, neutral 25 degrees, H0
-- `config/servo_mapping.json`: direction/axis mapping ที่วัดจากหุ่นจริง
+- `config/servo_mapping.json`: ตัวคูณ tilt → มุม servo จาก IK ที่ linearize รอบท่า neutral (ขนาดของตัวคูณกรอกตามโมเดล ไม่ได้ fit จากการวัด; ขั้น 04 ตรวจทิศทางของแต่ละ servo บนหุ่นจริง)
 
 หลังขั้น 1-3 เสร็จ `test_integrated_system/main.py` จะโหลด neutral และ mechanical limits จาก config เหล่านี้โดยตรง ไม่ใช้ค่า default ใน `params.py`
 

@@ -10,8 +10,9 @@
 ```
 กล้อง OV9281 (30 fps) → BallTracker ตรวจจับบอล (threshold ความสว่าง + Hough circle) → ตำแหน่ง x, y (cm)
 → ความเร็ว (alpha-beta filter) → LQR (+ bias trim + friction compensation + gain scheduling ตอนเดินตามเส้น)
-→ มุมเอียงแผ่น θx, θy → slew limit → servo_mapping (วัดจาก calibrate) → ตำแหน่ง servo → HX-35H ×3 ผ่าน /dev/serial0
-(IK แบบ linearized และ exact คำนวณทุกรอบเพื่อแสดง/เทียบเท่านั้น ไม่ได้ใช้สั่ง servo)
+→ มุมเอียงแผ่น θx, θy → slew limit → linearized IK (servo_mapping.json) → ตำแหน่ง servo → HX-35H ×3 ผ่าน /dev/serial0
+(servo_mapping คือ IK ที่ linearize รอบท่า neutral เป็น matrix 3×2 ทิศทางของแต่ละ servo ตรวจบนเครื่องจริง;
+exact IK ใน kinematics.py ใช้ตรวจสอบและจำลอง ต่างจาก mapping ~2.5% ที่มุมเล็ก และไม่ถึง 2 count ภายใน ±3°)
 ```
 
 - loop หลัก: `test_integrated_system/main.py` (1 รอบต่อ 1 เฟรมกล้อง, ส่งคำสั่ง servo ทุก ≥ 40 ms)
@@ -183,7 +184,7 @@ cd /home/rpi5/capstone_design
 | ไฟ Pi อาจตก | log เสีย (null byte / JSON ว่าง) 4 ครั้ง, อาจรีบูต | เช็กแหล่งจ่ายไฟ, แยกไฟ servo |
 | แสงไม่สม่ำเสมอ | ห้องผู้พัฒนา: บริเวณซ้าย (x < −4.5 cm) มืด บอลหลุดการตรวจจับ | ห้องแสงสม่ำเสมอไม่เจอ; งานค้างข้อ 1 |
 | ขอบกล้อง | บอลเกิน ~8 cm แนวตั้งถูกตัด/หลุด | อย่าขยายเส้นเกิน ~3.5 cm |
-| IK สองแบบไม่ตรงกัน | `linearized_ik` ให้มุมห่างจาก exact IK / คำสั่ง servo ~10 เท่า (บรรทัด `servo_err` ในหน้าจอ) — ไม่กระทบการควบคุมเพราะ servo ใช้ `servo_mapping` | ตรวจ `K_ACT` ใน `params.py` เทียบ notebook (notebook 0.093, params 0.055) |
+| `linearized_ik()` ไม่ตรงกับ exact IK | ฟังก์ชัน `linearized_ik()` ใน kinematics.py ให้ความชันสูงกว่า exact IK ~6.7% เพราะ `K_ACT` (0.055) เป็นค่าเก่า ไม่ได้คำนวณจาก geometry ปัจจุบัน — ไม่กระทบการควบคุม (servo ใช้ `servo_mapping`) | คำนวณ `K_ACT` ใหม่จาก exact IK ถ้าจะใช้ฟังก์ชันนี้ |
 | หกเหลี่ยม margin ต่ำกว่าวงกลม | มุมหกเหลี่ยมกระตุ้นการแกว่ง | ทดสอบแยกรูปทรงเสมอ |
 
 ## 11. งานค้าง / แนะนำให้ทำต่อ
@@ -193,7 +194,7 @@ cd /home/rpi5/capstone_design
 3. **System identification เต็มรูปแบบ** (step/chirp ของ servo+แผ่น, วัด breakaway ต่อช่วงเวลา) แล้วออกแบบ LQR ที่รวม delay/ความแข็งขั้นต่ำเป็นเงื่อนไข
 4. กล้อง fps สูงขึ้น (OV9281 ได้ ~120 fps ที่ความละเอียดต่ำ) — ลด delay 11–33 ms แต่ต้อง calibrate ใหม่
 5. replay test ของ `BallTracker` (ต้องเก็บภาพดิบไม่มี overlay ไว้ชุดหนึ่ง)
-6. ตรวจ `K_ACT` / linearized IK (ตารางข้อ 10)
+6. คำนวณ `K_ACT` ใหม่จาก exact IK (ตารางข้อ 10) และวัดมุมเอียงจริงของแผ่นด้วย IMU เพื่อยืนยันตัวคูณใน `servo_mapping.json`
 
 ## 12. Git
 

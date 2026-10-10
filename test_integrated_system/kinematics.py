@@ -70,7 +70,7 @@ def solve_leg_ik(
             f"[kinematics] WARNING: cos_q2={raw_cos_q2:.4f} out of [-1,1], clamped; "
             "leg geometry (RB/RP/L1/L2/H0/PLATFORM_OFFSET) may be inconsistent with the "
             "neutral pose. This only affects the diagnostic servo_theory/servo_err output, "
-            "not real actuation (which uses the calibrated servo_mapping matrix directly)."
+            "not real actuation (which uses the linearized servo_mapping matrix directly)."
         )
         _cos_q2_clamp_warned = True
     q2 = elbow_sign * math.acos(cos_q2)

@@ -24,11 +24,14 @@ and to move it along a circle or hexagon path.
 ## How it works
 ```
 Camera (OV9281, 30 fps) -> ball detection (OpenCV) -> alpha-beta velocity filter
--> LQR controller -> plate tilt angles -> calibrated tilt-to-servo mapping
+-> LQR controller -> plate tilt angles -> linearized inverse kinematics
 -> servo commands over UART -> 3 x HX-35H servos
 ```
-The tilt-to-servo mapping was measured on the real platform during calibration.
-Inverse kinematics is computed every loop for comparison and display only; it does not drive the servos.
+Plate tilt is converted to servo angles with the inverse kinematics of the 3RRS mechanism, linearized
+around the neutral pose (a fixed 3x2 matrix in `servo_calibration/config/servo_mapping.json`; the servo
+directions were checked on the real platform). The exact inverse kinematics (`kinematics.py`) is kept for
+checking and simulation: with the CAD geometry it differs from the linear map by about 2.5% at small
+tilts, and by less than 2 servo counts within ±3° of tilt.
 
 ## Hardware
 - Raspberry Pi 5 (Raspberry Pi OS, Python)
