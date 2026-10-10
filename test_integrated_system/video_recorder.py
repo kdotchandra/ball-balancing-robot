@@ -64,8 +64,8 @@ class VideoRecorder:
 class Overlay:
     """The annotation drawn on every recorded frame: reference path, ball trail and a two-line header.
 
-    Kept apart from the recorder so the presentation kit can draw the identical overlay on the frames
-    a run saved to disk (logs/frames_<stamp>/) when that run has no recorded video.
+    Kept apart from the recorder so the identical overlay can be drawn on the frames a run saved to
+    disk (logs/frames_<stamp>/) when that run has no recorded video.
     """
 
     def __init__(self, pixel_per_cm: float) -> None:

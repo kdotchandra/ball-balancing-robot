@@ -24,3 +24,12 @@ ping_pong_tracker/logs/
 *.h264
 *.zip
 *.docx
+
+# Presentation slides/videos and the written report: kept on disk only, not part of the project code
+test_integrated_system/presentation_kit.py
+test_integrated_system/presentation_assets.py
+test_integrated_system/ch4_docx.py
+test_integrated_system/ch4_figures.py
+test_integrated_system/path_analysis.py
+test_integrated_system/report_runs.json
+test_integrated_system/assets/

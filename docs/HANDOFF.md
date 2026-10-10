@@ -26,7 +26,7 @@
 | Servo | Hiwonder HX-35H bus servo ×3, UART half-duplex 115200 บน `/dev/serial0` (ttyAMA0) |
 | ต่อ Pi กับ servo bus | Pi TX → RX ของ Hiwonder BusLinker v3.0, Pi RX → TX ของ BusLinker (ไขว้กัน) → bus servo; ground ของ Pi และ BusLinker ต่อร่วมกัน (common GND) |
 | ไฟเลี้ยง | Servo: AC to DC power supply 12 V 16.7 A (ผ่าน BusLinker); Pi ใช้แหล่งจ่ายแยกต่างหาก |
-| กลไก | 3RRS, L1 65 mm, L2 112 mm, จุดยึดบนแผ่นรัศมี 120 mm, ฐาน 180 mm, neutral link-1 25° (`params.py`) |
+| กลไก | 3RRS, L1 65 mm, L2 112 mm, จุดยึดบนแผ่นรัศมี 130 mm (วัดจาก CAD), แกนเซอร์โวรัศมี ≈ 71 mm (เซอร์โวอยู่ด้านใน ขาชี้ออก), ball joint ต่ำกว่าผิวแผ่น 34 mm (joint plate 28 + อะคริลิก 6), neutral link-1 25° และ Link 2 ตั้งตรง (`params.py`) |
 | แผ่น / บอล | อะคริลิก, ลูกปิงปอง 40 mm / 2.7 g |
 | ระยะที่กล้องเห็น | แนวตั้งประมาณ ±8 cm จากกลาง (บอลเริ่มถูกขอบภาพตัดที่ ~8 cm), แนวนอนกว้างกว่า |
 
@@ -94,7 +94,6 @@ capstone_design/
     ├── run_metrics.py             ให้คะแนนรอบเทียบเป้าหมายรายงาน
     ├── analyze_runs.py            เทียบกลุ่มรอบตาม tag (ใช้ตอนจูน)
     ├── theory_limits.py, stability.py   ขีดจำกัดทางทฤษฎี + ค่าที่วัดได้ (MEASURED)
-    ├── presentation_kit.py, presentation_assets.py, ch4_*.py   รูป/วิดีโอ/รายงาน
     ├── tests/                     pytest (ไม่ต้องใช้ฮาร์ดแวร์)
     └── logs/                      log ทุกรอบ (git เก็บเฉพาะ run_*.csv/json)
 ```
@@ -199,7 +198,7 @@ cd /home/rpi5/capstone_design
 ## 12. Git
 
 - repo บน GitHub: https://github.com/kdotchandra/ball-balancing-robot (branch `main`); บนเครื่อง Pi อยู่ที่ `/home/rpi5/capstone_design`
-- ไม่เก็บ: `.venv/`, ภาพ debug `logs/frames_*`, วิดีโอ, `logs/presentation/` (อยู่บนดิสก์เครื่องนี้เท่านั้น — สำรองแยกถ้าต้องการ)
+- ไม่เก็บ: `.venv/`, ภาพ debug `logs/frames_*`, วิดีโอ
 - clone ลงเครื่องใหม่:
   ```bash
   git clone https://github.com/kdotchandra/ball-balancing-robot.git /home/rpi5/capstone_design

@@ -4,7 +4,7 @@ import math
 
 import numpy as np
 
-from params import BASE_HEIGHT, H0, J, K_ACT, L1, L2, PSI, RB, RP
+from params import ANCHOR_DROP, BASE_HEIGHT, H0, J, K_ACT, L1, L2, PSI, RB, RP
 
 
 def linearized_ik(phi: float, theta: float, h: float = 0.0) -> tuple[np.ndarray, np.ndarray]:
@@ -29,7 +29,8 @@ def base_point(index: int) -> np.ndarray:
 def platform_anchor_world(phi: float, theta: float, h: float, index: int) -> np.ndarray:
     x_local = RP * math.cos(PSI[index])
     y_local = RP * math.sin(PSI[index])
-    anchor_local = np.array([x_local, y_local, 0.0], dtype=float)
+    # h is the plate top surface; the ball joint hangs ANCHOR_DROP below it and tilts with the plate.
+    anchor_local = np.array([x_local, y_local, -ANCHOR_DROP], dtype=float)
 
     cx, sx = math.cos(phi), math.sin(phi)
     cy, sy = math.cos(theta), math.sin(theta)
@@ -40,7 +41,7 @@ def platform_anchor_world(phi: float, theta: float, h: float, index: int) -> np.
 
 
 def world_to_leg_plane(target_world: np.ndarray, index: int) -> np.ndarray:
-    leg_yaw = PSI[index] + math.pi
+    leg_yaw = PSI[index]  # legs point outward from the servo axis toward the anchor
     rel_world = np.asarray(target_world, dtype=float) - base_point(index)
     return rotation_matrix_z(-leg_yaw) @ rel_world
 

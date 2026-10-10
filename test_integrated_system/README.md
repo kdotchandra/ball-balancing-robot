@@ -147,8 +147,7 @@ tilt limit 8°, ส่งคำสั่งเซอร์โวทุก 0.04 s
 - ตัวอินทิเกรตช่วงเส้นทาง (`--path-ki`, LQI) ปิดไว้ (0) จนกว่าจะเลือกค่าจากการทดลอง:
   `python run_metrics.py --ladder ladder_0.05 ladder_0.10 ladder_0.20` ใช้เกณฑ์ที่กำหนดไว้ล่วงหน้าเลือกค่า
 - สรุปผลกลุ่มหนึ่ง: `python run_metrics.py --tag circle` (มีอัตราความสำเร็จพร้อมช่วงเชื่อมั่น 95%)
-- สร้างบทที่ 4-5 (Word + กราฟ): `python ch4_docx.py` → `logs/chapter4_5_report.docx`
-  ตัวเลขทุกตัวคำนวณจากไฟล์ log ใหม่ทุกครั้ง; วัดเวลาหน่วงของลูปด้วย `test_freq_response.py`
+- วัดเวลาหน่วงของลูปด้วย `test_freq_response.py`
 
 ## Pipeline ที่ระบบทำในแต่ละเฟรม
 

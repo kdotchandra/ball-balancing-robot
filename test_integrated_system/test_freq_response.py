@@ -179,8 +179,7 @@ def print_results(results: list[tuple[str, dict]]) -> None:
     print(f"plant gain g_eff (median): {s['g_eff']:.2f} m/s^2/rad   (design model {ST.G_EFF:.3f})")
     print("A consistent delay across frequencies means the model fits; a delay that changes strongly with "
           "frequency means something other than a pure delay is missing.")
-    print(f"Add these logs to report_runs.json under 'freq_response' and rebuild the report; the estimate "
-          f"{ST.DEFAULT_DELAY_S:g} s is then replaced by this measurement.")
+    print(f"Compare with the design estimate {ST.DEFAULT_DELAY_S:g} s (stability.DEFAULT_DELAY_S).")
 
 
 def main() -> None:

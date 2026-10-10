@@ -13,13 +13,8 @@ import matplotlib.pyplot as plt
 import numpy as np
 from matplotlib.animation import FuncAnimation
 
-# Geometry used by the current 3RRS model.
-L1 = 0.065
-L2 = 0.112
-RP = 0.12
-RB = 0.18
-H0 = 0.144438590975
-PSI = np.deg2rad([0.0, 120.0, 240.0])
+# Geometry of the built 3RRS (single source: params.py). H0 is the plate top surface.
+from params import ANCHOR_DROP, H0, L1, L2, PSI, RB, RP
 
 # Slow trajectory settings.
 SIMULATION_SECONDS = 20.0
@@ -65,11 +60,12 @@ def base_point(index: int) -> np.ndarray:
     return np.array([RB * math.cos(angle), RB * math.sin(angle), 0.0])
 
 
-def platform_anchor(phi: float, theta: float, height: float, index: int) -> np.ndarray:
+def platform_anchor(phi: float, theta: float, height: float, index: int, drop: float = ANCHOR_DROP) -> np.ndarray:
+    # The ball joint hangs `drop` below the plate top surface and tilts with the plate.
     local = np.array([
         RP * math.cos(PSI[index]),
         RP * math.sin(PSI[index]),
-        0.0,
+        -drop,
     ])
     # Match the platform rotation convention used by the IK notebook.
     rotation = rotation_y(theta) @ rotation_x(phi)
@@ -79,7 +75,7 @@ def platform_anchor(phi: float, theta: float, height: float, index: int) -> np.n
 def solve_leg(phi: float, theta: float, height: float, index: int) -> LegPose:
     target = platform_anchor(phi, theta, height, index)
     base = base_point(index)
-    yaw = PSI[index] + math.pi
+    yaw = PSI[index]  # servos sit inside the anchor circle, legs point outward
     relative = rotation_z(-yaw) @ (target - base)
     x_local = float(relative[0])
     z_local = float(relative[2])
@@ -174,7 +170,8 @@ def main() -> None:
                 [leg.platform_anchor[2]],
             )
 
-        plate_line.set_data_3d(anchors[:, 0], anchors[:, 1], anchors[:, 2])
+        plate = np.array([platform_anchor(phi, theta, height, index, drop=0.0) for index in (0, 1, 2, 0)])
+        plate_line.set_data_3d(plate[:, 0], plate[:, 1], plate[:, 2])
         center_point.set_data_3d([0.0], [0.0], [height])
         max_reconstruction_error = max(leg.length_error for leg in legs)
         q1_deg = np.rad2deg([leg.q1 for leg in legs])

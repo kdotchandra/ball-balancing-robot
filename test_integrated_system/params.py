@@ -12,12 +12,15 @@ TA = 0.181437  # s
 # 3RRS geometry
 L1 = 0.065  # m, link 1 length (65 mm)
 L2 = 0.112  # m, link 2 length (112 mm)
-RP = 0.12  # m
-RB = 0.18  # m
 H0 = 0.1735  # m, measured neutral platform height at 25-degree Link 1 pose
 NEUTRAL_LINK1_ANGLE_DEG = 25.0
 ACRYLIC_THICKNESS = 0.006  # m, 6 mm plate; kept as a platform offset, not a link length
-PLATFORM_OFFSET = 0.028  # m, reference drawing offset; verify datum before using in H0
+PLATFORM_OFFSET = 0.028  # m, joint plate: ball joint -> plate underside
+ANCHOR_DROP = PLATFORM_OFFSET + ACRYLIC_THICKNESS  # m, ball joint below the plate top surface
+# H0 = L1*sin(25 deg) + L2 + ANCHOR_DROP: Link 2 vertical at neutral.
+RP = 0.130  # m, plate center -> ball joint, measured in CAD top view (130.00 / 129.96 / 130.04)
+# Servos sit inside the anchor circle with legs pointing outward; Link 2 vertical at neutral.
+RB = RP - L1 * np.cos(np.deg2rad(NEUTRAL_LINK1_ANGLE_DEG))  # m, ~0.0711
 BASE_HEIGHT = 0.0
 PSI = np.array([0.0, 2.0 * np.pi / 3.0, 4.0 * np.pi / 3.0], dtype=float)
 
